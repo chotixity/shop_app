@@ -3,15 +3,47 @@ import 'package:provider/provider.dart';
 
 import '../providers/products_provider.dart';
 import '../widgets/product_item.dart';
+import '../providers/product.dart';
+
+enum FilterOptions {
+  Favorites,
+  All,
+}
 
 class ProductsOverviewScreen extends StatelessWidget {
   ProductsOverviewScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final productsData = Provider.of<Products>(
+      context,
+      listen: false,
+    );
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Shop'),
+        actions: <Widget>[
+          PopupMenuButton(
+            onSelected: (FilterOptions value) {
+              if (value == FilterOptions.Favorites) {
+                productsData.showFavoriesOnly();
+              } else {
+                productsData.showAll();
+              }
+            },
+            itemBuilder: ((context) => [
+                  const PopupMenuItem(
+                    value: FilterOptions.Favorites,
+                    child: Text('only Favorites'),
+                  ),
+                  const PopupMenuItem(
+                    value: FilterOptions.All,
+                    child: Text('show all'),
+                  ),
+                ]),
+            icon: const Icon(Icons.more_vert),
+          ),
+        ],
       ),
       body: ProductsGrid(),
     );
