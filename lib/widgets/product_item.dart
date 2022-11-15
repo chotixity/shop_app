@@ -6,6 +6,8 @@ import '../providers/product.dart';
 import '../providers/cart.dart';
 
 class ProductItem extends StatelessWidget {
+  const ProductItem({super.key});
+
   //final String id;
   //final String title;
   //final String imageUrl;
@@ -42,12 +44,19 @@ class ProductItem extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           trailing: IconButton(
-            icon: const Icon(Icons.shopping_cart),
+            icon: const Icon(
+              Icons.shopping_cart,
+            ),
             onPressed: () {
               cart.addItem(
                 product.id,
                 product.price,
                 product.title,
+              );
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Item added to cart'),
+                ),
               );
             },
             color: Theme.of(context).colorScheme.secondary,
