@@ -48,7 +48,7 @@ class ProductsOverviewScreen extends StatelessWidget {
             icon: const Icon(Icons.more_vert),
           ),
           Consumer<Cart>(
-            builder: (context, cart, child) => Badge(
+            builder: (context, cart, child) => Badgeo(
               value: cart.itemCount.toString(),
               child: IconButton(
                 icon: const Icon(Icons.shopping_cart),
