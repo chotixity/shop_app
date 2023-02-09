@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import './product.dart';
 
@@ -61,8 +63,44 @@ class Products with ChangeNotifier {
     return _items.firstWhere((product) => product.id == id);
   }
 
-  void addProduct() {
-    //_items.add();
+  Future<void> addProduct(Product product) {
+    const url =
+        'https://shop-app-89a15-default-rtdb.firebaseio.com/products.json';
+
+    return http
+        .post(
+      url as Uri,
+      body: json.encode({
+        'title': product.title,
+        'description': product.description,
+        'price': product.imageUrl,
+        'isFavorite': product.isFavorite,
+      }),
+    )
+        .then((response) {
+      final newProduct = Product(
+        id: json.decode(response.body)['name'],
+        title: product.title,
+        description: product.description,
+        imageUrl: product.imageUrl,
+        price: product.price,
+      );
+      _items.add(newProduct);
+      notifyListeners();
+    });
+  }
+
+  void updateProduct(String id, Product newProduct) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    if (prodIndex >= 0) {
+      _items[prodIndex] = newProduct;
+      notifyListeners();
+    }
+  }
+
+  void deleteProduct(String id) {
+    final prodIndex = _items.indexWhere((prod) => prod.id == id);
+    _items.removeAt(prodIndex);
     notifyListeners();
   }
 }
